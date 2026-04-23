@@ -1,5 +1,6 @@
-// C# API ile iletişim kuran servis katmanı
-const API_BASE_URL = 'http://blog.mtapi.com.tr/api';
+// Canlı ve Yerel ortam ayrımı
+const IS_LOCAL = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+const API_BASE_URL = IS_LOCAL ? 'http://localhost:5279/api' : 'http://blog.mtapi.com.tr/api';
 const IS_MOCK = false;
 
 const getAuthHeader = () => {

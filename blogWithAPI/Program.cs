@@ -55,7 +55,11 @@ builder.Services.AddHttpClient();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = "http://blog.mtapi.com.tr";
+        // Geliştirme aşamasında localhost, canlıda mtapi domaini
+        options.Authority = builder.Environment.IsDevelopment() 
+            ? "http://localhost:5279" 
+            : "http://blog.mtapi.com.tr";
+            
         options.Audience = "blogapi";
         options.RequireHttpsMetadata = false;
     });
