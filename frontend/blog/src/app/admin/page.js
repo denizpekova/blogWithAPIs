@@ -23,10 +23,21 @@ export default function AdminDashboard() {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      const data = await apiService.get('/posts');
-      setPosts(data);
+      const results = await apiService.get('/posts');
+      const dataArray = results?.data || results?.Data || [];
+      
+      const mapped = dataArray.map(item => ({
+        id: item.blogId || item.id,
+        title: item.blogTitle || item.title,
+        author: item.blogAuthor || 'Admin',
+        date: item.blogDate ? new Date(item.blogDate).toLocaleDateString() : 'Bugün',
+        content: item.blogContent || item.content
+      }));
+
+      setPosts(mapped);
     } catch (err) {
       console.error(err);
+      setPosts([]);
     } finally {
       setLoading(false);
     }

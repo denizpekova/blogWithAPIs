@@ -11,13 +11,20 @@ export default function AdminGuard({ children }) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const user = await apiService.getCurrentUser();
-        if (user && user.role === 'Admin') {
+        const response = await apiService.getCurrentUser();
+        // Hem büyük harf hem küçük harf kontrolü (IsSuccess/isSuccess, Data/data, Role/role)
+        const isSuccess = response?.isSuccess || response?.IsSuccess;
+        const data = response?.data || response?.Data;
+        const role = data?.role || data?.Role;
+
+        if (isSuccess && role === 'Admin') {
           setAuthorized(true);
         } else {
+          console.warn('Unauthorized access attempt:', response);
           router.push('/auth/login?error=Unauthorized');
         }
       } catch (err) {
+        console.error('Guard error:', err);
         router.push('/auth/login');
       } finally {
         setLoading(false);

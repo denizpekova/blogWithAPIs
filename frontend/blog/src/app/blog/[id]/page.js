@@ -21,8 +21,19 @@ export default function ArchitectBlogDetail() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const data = await apiService.getById('/posts', id);
-        setPost(data);
+        const result = await apiService.getById('/posts', id);
+        const item = result?.data || result?.Data || result;
+        
+        if (item) {
+          setPost({
+            id: item.blogId || item.id,
+            title: item.blogTitle || item.title || item.Title,
+            content: item.blogContent || item.content || item.Content,
+            author: item.blogAuthor || item.author || item.Author || 'Admin',
+            date: item.blogDate || item.createdDate || item.CreatedDate ? new Date(item.blogDate || item.createdDate || item.CreatedDate).toLocaleDateString() : 'Bilinmiyor',
+            image: item.blogImage || item.imageUrl || item.ImageUrl || item.image
+          });
+        }
       } catch (err) {
         console.error('Fetch error:', err);
       } finally {
@@ -48,6 +59,8 @@ export default function ArchitectBlogDetail() {
     return (
       <div className="article-container text-center pt-32">
          <h2 className="epic-title">Signal Lost.</h2>
+         <p className="admin-subtitle">Bu veri düğümüne ulaşılamıyor.</p>
+         <Link href="/" className="btn-premium mt-8 inline-block">Nexus'a Dön</Link>
       </div>
     );
   }
@@ -60,7 +73,6 @@ export default function ArchitectBlogDetail() {
       transition={{ duration: 0.8 }}
       className="architect-blog-detail"
     >
-      {/* 2026 Dynamic Mesh Gradients Background */}
       <div className="dynamic-mesh-background">
         <div className="mesh-orb orb-1"></div>
         <div className="mesh-orb orb-2"></div>
@@ -71,7 +83,7 @@ export default function ArchitectBlogDetail() {
       <header className="article-header">
         <div className="article-container">
           <Link href="/" className="back-badge">
-            <ArrowLeft size={16} /> <span>Return to Nexus</span>
+            <ArrowLeft size={16} /> <span>Nexus'a Dön</span>
           </Link>
           
           <motion.div 
@@ -80,7 +92,7 @@ export default function ArchitectBlogDetail() {
             transition={{ ...spring, delay: 0.1 }}
             className="meta-cluster"
           >
-             <span className="crystal-badge">SYSTEM ARCHITECTURE</span>
+             <span className="crystal-badge">BLOG İÇERİĞİ</span>
              <span className="meta-info"><Clock size={14} /> {post.date}</span>
              <span className="meta-info"><User size={14} /> {post.author}</span>
           </motion.div>
@@ -95,15 +107,17 @@ export default function ArchitectBlogDetail() {
           </motion.h1>
         </div>
 
-        <motion.div 
-          initial={{ y: 50, opacity: 0, scale: 0.95 }}
-          animate={{ y: 0, opacity: 1, scale: 1 }}
-          transition={{ ...spring, delay: 0.3 }}
-          className="article-hero-media"
-        >
-          <img src={post.image} alt={post.title} className="hero-img" />
-          <div className="hero-img-overlay"></div>
-        </motion.div>
+        {post.image && (
+          <motion.div 
+            initial={{ y: 50, opacity: 0, scale: 0.95 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            transition={{ ...spring, delay: 0.3 }}
+            className="article-hero-media"
+          >
+            <img src={post.image} alt={post.title} className="hero-img" />
+            <div className="hero-img-overlay"></div>
+          </motion.div>
+        )}
       </header>
 
       <div className="article-container layout-with-sidebar">
@@ -127,42 +141,9 @@ export default function ArchitectBlogDetail() {
           className="article-body"
         >
           <div className="rich-text-content">
-            <p className="lead-paragraph">
-              {post.summary}
-            </p>
-
-            <h2 className="section-heading">Geleceğin Mimarisini İnşa Etmek</h2>
-            <p>
-              Embracing <strong>Glassmorphism 2.0</strong> necessitates leaving flat design in the past. 
-              Geleneksel web siteleri sadece bilgi verir, ancak bu yapılar duygusal bir zekaya sahiptir.
-              Her tıklama, her kaydırma hareketi WebGPU üzerinden işlenerek kusursuz bir tepki mekanizması oluşturur.
-            </p>
-
-            <blockquote className="visionary-quote">
-              "Arayüzlerimiz artık ekranlarda değil, kullanıcıların zihinlerinde var olan uzamsal alanlardır."
-            </blockquote>
-
-            <h2 className="section-heading">Matematiksel Performans</h2>
-            <p>
-              Tasarım dilimizdeki "Inner Glow" tekniği, %5 beyaz opaklık ile nesnelere fütüristik bir hacim 
-              kazandırır. Bu sadece bir gölge efekti değil, dijital varlığın evrenle çarpışmasından doğan bir enerji 
-              patlamasıdır.
-            </p>
-
-            <div className="bento-box">
-              <h3 className="bento-title">Sistemin Temel Prensipleri</h3>
-              <ul className="bento-list">
-                <li>Backdrop Filter Blur: 40px, Saturate: %150</li>
-                <li>Framer Motion Yay Dinamiği: Stiffness 100, Damping 20</li>
-                <li>Dynamic Mesh Animasyonları: Renklerin sürekli akışı</li>
-              </ul>
+            <div className="content-rendered" style={{ whiteSpace: 'pre-wrap', lineHeight: '1.8' }}>
+              {post.content}
             </div>
-            
-            <p>
-              Tüm bu elementlerin mükemmel bir uyum içinde çalışabilmesi için CSS modüllerini ve DOM
-              manipülasyonlarını tamamen asenkronize ettik. 2026'da "yükleme süresi" kavramı artık 
-              tasarımın ayrılmaz bir deneyimidir.
-            </p>
           </div>
         </motion.main>
       </div>

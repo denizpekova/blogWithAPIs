@@ -3,12 +3,13 @@ using blogWithAPI.BusinessLayer.Abstract;
 using blogWithAPI.Entity.Concrete;
 using blogWithAPI.Entity.Results;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 namespace blogWithAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/posts")]
     public class BlogController : ControllerBase
     {
         private readonly IBlogService _blogService;
@@ -21,63 +22,39 @@ namespace blogWithAPI.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-           var result = _blogService.GetAll();
-           if(result.IsSuccess)
-           {
-            return Ok(result);
-           }
-           return BadRequest(result);
+            var result = _blogService.GetAll();
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpGet("{id}")]
-        [Route("getbyid")]
         public IActionResult GetById(int id)
         {
             var result = _blogService.GetById(id);
-            if(result.IsSuccess)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
-        [Route("add")]
         public IActionResult Add(Blog blog)
         {
             var result = _blogService.Add(blog);
-            if(result.IsSuccess)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut]
-        [Route("update")]
         public IActionResult Update(Blog blog)
         {
             var result = _blogService.Update(blog);
-            if(result.IsSuccess)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("{id}")]
-        [Route("delete")]
         public IActionResult Delete(int id)
         {
             var result = _blogService.Delete(id);
-            if(result.IsSuccess)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
     }
 }

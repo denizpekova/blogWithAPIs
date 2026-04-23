@@ -3,23 +3,29 @@ using blogWithAPI.Entity.Concrete;
 using blogWithAPI.Entity.Results;
 using blogWithAPI.Model;
 using Microsoft.AspNetCore.Identity;
-using Duende.IdentityModel.Client; // 'IdentityModel.Client' yerine bunu yazın
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Duende.IdentityModel.Client;
 
+
+using System.Security.Claims;
 
 namespace blogWithAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly RoleManager<AppRole> _roleManager;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IHttpClientFactory httpClientFactory)
+        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IHttpClientFactory httpClientFactory)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
             _httpClientFactory = httpClientFactory;
         }
         
@@ -32,14 +38,21 @@ namespace blogWithAPI.Controllers
                 UserName = registerDto.UserName,
                 Name = registerDto.FirstName,
                 Surname = registerDto.LastName,
-                ImageUrl = "" // Boş kalmaması için ekleyelim
-
+                ImageUrl = ""
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (result.Succeeded)
             {
-                return Ok(new SuccessResult("Kullanıcı başarıyla kaydedildi."));
+                // Admin rolü yoksa oluştur
+                if (!await _roleManager.RoleExistsAsync("Admin"))
+                {
+                    await _roleManager.CreateAsync(new AppRole { Name = "Admin" });
+                }
+                // Kullanıcıya Admin rolünü ata
+                await _userManager.AddToRoleAsync(user, "Admin");
+
+                return Ok(new SuccessResult("Kullanıcı başarıyla kaydedildi ve Admin olarak atandı."));
             }
             return BadRequest(new ErrorResult("Kullanıcı kaydedilemedi."));
         }
@@ -47,7 +60,7 @@ namespace blogWithAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO loginDto)
         {
-            var user = await _userManager.FindByNameAsync(loginDto.UserName);
+            var user = await _userManager.FindByEmailAsync(loginDto.Email);
             if (user == null)
             {
                 return BadRequest(new ErrorResult("Kullanıcı bulunamadı."));
@@ -72,7 +85,7 @@ namespace blogWithAPI.Controllers
             var tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
                 Address = discovery.TokenEndpoint,
-                UserName = loginDto.UserName,
+                UserName = user.UserName!, // IdentityServer kullanıcı adını (username) bekler
                 Password = loginDto.Password,
                 ClientId = "blogClient",
                 ClientSecret = "secret",
@@ -87,6 +100,27 @@ namespace blogWithAPI.Controllers
                  ExpiresIn = tokenResponse.ExpiresIn,
                  User = user.UserName
             }, "Token başarıyla alındı."));
+        }
+
+        [HttpGet("me")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetMe()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            AppUser? user = null;
+            if (!string.IsNullOrEmpty(userId)) user = await _userManager.FindByIdAsync(userId);
+            if (user == null) user = await _userManager.FindByNameAsync(User.Identity?.Name ?? "");
+
+            if (user == null) return Unauthorized(new ErrorResult("Kullanıcı kimliği doğrulanamadı."));
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            return Ok(new SuccessDataResult<object>(new 
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                Role = roles.FirstOrDefault() ?? "Admin" 
+            }, "Kullanıcı bilgileri getirildi."));
         }
 
         [HttpPost("logout")]

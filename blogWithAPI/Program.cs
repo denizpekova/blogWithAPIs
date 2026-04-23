@@ -46,22 +46,49 @@ builder.Services.AddIdentityServer()
     .AddInMemoryClients(Config.Clients)
     .AddInMemoryIdentityResources(Config.IdentityResources)
     .AddInMemoryApiScopes(Config.ApiScopes)
+    .AddInMemoryApiResources(Config.ApiResources)
     .AddAspNetIdentity<AppUser>()
     .AddDeveloperSigningCredential();
 
 builder.Services.AddHttpClient();
 
 // 4. JWT Bearer (API Koruması)
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(options => {
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
     .AddJwtBearer(options =>
     {
-        // Geliştirme aşamasında localhost, canlıda mtapi domaini
         options.Authority = builder.Environment.IsDevelopment() 
             ? "http://localhost:5279" 
             : "http://blog.mtapi.com.tr";
             
         options.Audience = "blogapi";
         options.RequireHttpsMetadata = false;
+
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidIssuer = builder.Environment.IsDevelopment() ? "http://localhost:5279" : "http://blog.mtapi.com.tr",
+            ValidateLifetime = true
+        };
+
+        // HATA AYIKLAMA İÇİN LOGLARI AÇIYORUZ
+        options.Events = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine("Auth Hata: " + context.Exception.Message);
+                return Task.CompletedTask;
+            },
+            OnTokenValidated = context =>
+            {
+                Console.WriteLine("Token Başarılı: " + context.SecurityToken.Id);
+                return Task.CompletedTask;
+            }
+        };
     });
 
 // 5. Standart API Servisleri

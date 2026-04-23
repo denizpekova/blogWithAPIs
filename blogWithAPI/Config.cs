@@ -15,6 +15,14 @@ namespace blogWithAPI
             new ApiScope("blogapi", "Blog API")
         };
 
+        public static IEnumerable<ApiResource> ApiResources => new ApiResource[]
+        {
+            new ApiResource("blogapi", "Blog API")
+            {
+                Scopes = { "blogapi" }
+            }
+        };
+
         public static IEnumerable<Client> Clients => new Client[]
         {
             new Client
@@ -23,7 +31,7 @@ namespace blogWithAPI
                 ClientName = "Blog API Client",
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                 ClientSecrets = { new Secret("secret".Sha256()) },
-                AllowedScopes = { "blogapi" }
+                AllowedScopes = { "blogapi", "openid", "profile" }
             }
         };
     }

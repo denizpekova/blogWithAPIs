@@ -44,8 +44,20 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const data = await apiService.get('/posts');
-        setPosts(data);
+        const response = await apiService.get('/posts');
+        // API bir Result objesi döndüğü için içindeki 'data' kısmını alıyoruz
+        if (response && response.data) {
+          // API alan isimlerini (imageUrl, createdDate) Frontend isimlerine (image, date) çeviriyoruz
+          const mappedData = response.data.map(item => ({
+            ...item,
+            image: item.imageUrl || item.image,
+            date: item.createdDate ? new Date(item.createdDate).toLocaleDateString() : item.date,
+            summary: item.content || item.summary
+          }));
+          setPosts(mappedData);
+        } else if (Array.isArray(response)) {
+          setPosts(response);
+        }
       } catch (err) {
         console.error('Fetch error:', err);
       } finally {

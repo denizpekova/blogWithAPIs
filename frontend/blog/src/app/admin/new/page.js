@@ -26,11 +26,22 @@ export default function NewPost() {
     e.preventDefault();
     setLoading(true);
     try {
-      await apiService.post('/posts', formData);
+      // Backend'in beklediği model yapısına dönüştürüyoruz
+      const blogData = {
+        Title: formData.title,
+        Content: formData.content,
+        ImageUrl: formData.image,
+        Author: 'Admin', // Şimdilik statik, sistem oturduğunda user.name'den alabiliriz
+        CreatedDate: new Date().toISOString(),
+        UpdatedDate: new Date().toISOString()
+      };
+
+      await apiService.post('/posts', blogData);
       alert('Yazı başarıyla yayımlandı!');
       router.push('/admin');
     } catch (err) {
       console.error(err);
+      alert('Yazı yayımlanırken bir hata oluştu.');
     } finally {
       setLoading(false);
     }

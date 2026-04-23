@@ -19,7 +19,8 @@ export const apiService = {
     const res = await fetch(`${API_BASE_URL}${endpoint}`, {
       headers: { ...getAuthHeader() }
     });
-    return res.json();
+    const text = await res.text();
+    try { return text ? JSON.parse(text) : null; } catch (e) { return null; }
   },
 
   async getById(endpoint, id) {
@@ -30,7 +31,8 @@ export const apiService = {
     const res = await fetch(`${API_BASE_URL}${endpoint}/${id}`, {
       headers: { ...getAuthHeader() }
     });
-    return res.json();
+    const text = await res.text();
+    try { return text ? JSON.parse(text) : null; } catch (e) { return null; }
   },
 
   async post(endpoint, data) {
@@ -43,7 +45,8 @@ export const apiService = {
       },
       body: JSON.stringify(data)
     });
-    return res.json();
+    const text = await res.text();
+    try { return text ? JSON.parse(text) : null; } catch (e) { return null; }
   },
 
   async put(endpoint, id, data) {
@@ -56,7 +59,8 @@ export const apiService = {
       },
       body: JSON.stringify(data)
     });
-    return res.json();
+    const text = await res.text();
+    try { return text ? JSON.parse(text) : null; } catch (e) { return null; }
   },
 
   async delete(endpoint, id) {
@@ -65,16 +69,25 @@ export const apiService = {
       method: 'DELETE',
       headers: { ...getAuthHeader() }
     });
-    return res.json();
+    const text = await res.text();
+    try { return text ? JSON.parse(text) : null; } catch (e) { return null; }
   },
 
   async getCurrentUser() {
     if (IS_MOCK) {
       return { name: 'Admin User', email: 'admin@example.com', role: 'Admin' };
     }
-    const res = await fetch(`${API_BASE_URL}/auth/me`, {
-      headers: { ...getAuthHeader() }
-    });
-    return res.json();
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/me`, {
+        headers: { ...getAuthHeader() }
+      });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+      console.log('[API] getCurrentUser response:', data);
+      return data;
+    } catch (e) {
+      console.error('[API] getCurrentUser error:', e);
+      return null;
+    }
   }
 };

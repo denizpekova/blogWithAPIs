@@ -4,12 +4,15 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Mail, Lock, LogIn } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useRouter } from 'next/navigation';
+import { apiService } from '@/services/api';
 import '@/app/auth/auth.css';
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const { lang } = useLanguage();
+  const router = useRouter();
 
   const content = {
     en: {
@@ -20,7 +23,8 @@ export default function Login() {
       forgot: "Lost your key?",
       button: "Sign In",
       loading: "Authenticating...",
-      alert: "Access Granted. Welcome back."
+      alert: "Access Granted. Welcome back.",
+      error: "Access Denied. Please check your credentials."
     },
     tr: {
       title: "Otoriteye Dönüş.",
@@ -30,19 +34,39 @@ export default function Login() {
       forgot: "Anahtarınızı mı kaybettiniz?",
       button: "Matrise Giriş Yap",
       loading: "Doğrulanıyor...",
-      alert: "Erişim İzni Verildi."
+      alert: "Erişim İzni Verildi.",
+      error: "Erişim Engellendi. Bilgilerinizi kontrol edin."
     }
   };
 
   const t = content[lang];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    
+    try {
+      const response = await apiService.post('/auth/login', formData);
+      if (response && (response.isSuccess || response.IsSuccess)) {
+        // Hem 'token' hem 'Token' kontrolü yapıyoruz
+        const data = response.data || response.Data;
+        const authToken = data?.token || data?.Token;
+        
+        if (authToken) {
+          localStorage.setItem('token', authToken);
+          router.push('/admin');
+          setTimeout(() => router.refresh(), 100);
+        } else {
+          alert("Token alınamadı.");
+        }
+      } else {
+        alert(response?.message || t.error);
+      }
+    } catch (err) {
+      alert(t.error);
+    } finally {
       setLoading(false);
-      alert(t.alert);
-    }, 1500);
+    }
   };
 
   return (
