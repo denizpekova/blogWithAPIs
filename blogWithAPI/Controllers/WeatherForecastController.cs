@@ -28,6 +28,7 @@ namespace blogWithAPI.Controllers
         }
 
         [HttpPost]
+        [Route("add")]
         public IActionResult Add(blog blog)
         {
             _blogService.Add(blog);
