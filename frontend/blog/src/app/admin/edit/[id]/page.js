@@ -21,7 +21,8 @@ export default function EditPost({ params }) {
     summary: '',
     image: '',
     content: '',
-    createdDate: ''
+    createdDate: '',
+    author: 'Admin'
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -38,7 +39,8 @@ export default function EditPost({ params }) {
             summary: item.blogSummary || item.summary || '',
             image: item.blogImage || item.imageUrl || item.ImageUrl || '',
             content: item.blogContent || item.content || item.Content || '',
-            createdDate: item.blogCreatedDate || item.createdDate || item.CreatedDate || ''
+            createdDate: (item.blogCreatedDate || item.createdDate || item.CreatedDate || '').split('T')[0],
+            author: item.blogAuthor || item.author || item.Author || 'Admin'
           });
         }
       } catch (err) {
@@ -60,8 +62,8 @@ export default function EditPost({ params }) {
         Title: formData.title,
         Content: formData.content,
         ImageUrl: formData.image,
-        Author: 'Admin',
-        CreatedDate: formData.createdDate,
+        Author: formData.author,
+        CreatedDate: new Date(formData.createdDate).toISOString(),
         UpdatedDate: new Date().toISOString()
       };
 
@@ -124,6 +126,30 @@ export default function EditPost({ params }) {
                 value={formData.image}
                 onChange={(e) => setFormData({...formData, image: e.target.value})}
               />
+            </div>
+
+            <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              <div className="form-group">
+                <label>YAZAR</label>
+                <input 
+                  type="text" 
+                  className="admin-input"
+                  required
+                  value={formData.author}
+                  onChange={(e) => setFormData({...formData, author: e.target.value})}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>YAYIN TARİHİ</label>
+                <input 
+                  type="date" 
+                  className="admin-input"
+                  required
+                  value={formData.createdDate}
+                  onChange={(e) => setFormData({...formData, createdDate: e.target.value})}
+                />
+              </div>
             </div>
 
             <div className="form-group">

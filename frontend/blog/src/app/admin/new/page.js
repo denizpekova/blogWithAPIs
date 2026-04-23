@@ -18,7 +18,9 @@ export default function NewPost() {
     title: '',
     summary: '',
     image: '',
-    content: ''
+    content: '',
+    author: 'Admin',
+    date: new Date().toISOString().split('T')[0]
   });
   const [loading, setLoading] = useState(false);
 
@@ -31,8 +33,8 @@ export default function NewPost() {
         Title: formData.title,
         Content: formData.content,
         ImageUrl: formData.image,
-        Author: 'Admin', // Şimdilik statik, sistem oturduğunda user.name'den alabiliriz
-        CreatedDate: new Date().toISOString(),
+        Author: formData.author,
+        CreatedDate: new Date(formData.date).toISOString(),
         UpdatedDate: new Date().toISOString()
       };
 
@@ -101,6 +103,31 @@ export default function NewPost() {
                 value={formData.image}
                 onChange={(e) => setFormData({...formData, image: e.target.value})}
               />
+            </div>
+
+            <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              <div className="form-group">
+                <label>YAZAR</label>
+                <input 
+                  type="text" 
+                  className="admin-input"
+                  placeholder="Yazar adı..." 
+                  required
+                  value={formData.author}
+                  onChange={(e) => setFormData({...formData, author: e.target.value})}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>YAYIN TARİHİ</label>
+                <input 
+                  type="date" 
+                  className="admin-input"
+                  required
+                  value={formData.date}
+                  onChange={(e) => setFormData({...formData, date: e.target.value})}
+                />
+              </div>
             </div>
 
             <div className="form-group">

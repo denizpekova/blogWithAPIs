@@ -27,11 +27,11 @@ export default function AdminDashboard() {
       const dataArray = results?.data || results?.Data || [];
       
       const mapped = dataArray.map(item => ({
-        id: item.blogId || item.id,
-        title: item.blogTitle || item.title,
-        author: item.blogAuthor || 'Admin',
-        date: item.blogDate ? new Date(item.blogDate).toLocaleDateString() : 'Bugün',
-        content: item.blogContent || item.content
+        id: item.id || item.blogId,
+        title: item.title || item.blogTitle,
+        author: item.author || item.blogAuthor || 'Admin',
+        date: item.createdDate || item.blogDate || item.CreatedDate ? new Date(item.createdDate || item.blogDate || item.CreatedDate).toLocaleDateString() : 'Bugün',
+        content: item.content || item.blogContent
       }));
 
       setPosts(mapped);
