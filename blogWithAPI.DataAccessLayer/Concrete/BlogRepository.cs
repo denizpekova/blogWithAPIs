@@ -1,13 +1,10 @@
-﻿using DataAccessLayer.Concrete;
-using DataAccessLayerr.Abstrack;
-using EntityLayerr.Concrate;
+using blogWithAPI.DataAccessLayer.Abstract;
+using blogWithAPI.DataAccessLayer.Concrete;
+using blogWithAPI.Entity.Concrete;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace blogWithAPI.DataAccessLayer.Concrete
 {
@@ -20,7 +17,7 @@ namespace blogWithAPI.DataAccessLayer.Concrete
             _context = context;
         }
 
-        public void Add(blog blog)
+        public blog Add(blog blog)
         {
             _context.Blogs.Add(blog);
             _context.SaveChanges();
@@ -54,5 +51,4 @@ namespace blogWithAPI.DataAccessLayer.Concrete
             }
         }
     }
-} 
-        
+}
