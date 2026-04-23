@@ -6,21 +6,44 @@ namespace blogWithAPI.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries =
-        [
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        ];
+        private readonly IBlogService _blogService;
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public WeatherForecastController(IBlogService blogService)
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+            _blogService = blogService;
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok(_blogService.GetAll());
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            return Ok(_blogService.GetById(id));
+        }
+
+        [HttpPost]
+        public IActionResult Add(blog blog)
+        {
+            _blogService.Add(blog);
+            return Ok();
+        }
+
+        [HttpPut]
+        public IActionResult Update(blog blog)
+        {
+            _blogService.Update(blog);
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _blogService.Delete(id);
+            return Ok();
         }
     }
 }
