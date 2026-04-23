@@ -1,81 +1,96 @@
-# 🌌 Core Blog Engine: The 2026 Reference Implementation
+# 🛡️ Sentinel & Aurora: The 2026 Full-Stack Symphony
 
-![Tech Stack](https://img.shields.io/badge/Architecture-Clean_Architecture-blueviolet?style=for-the-badge&logo=architecture)
-![Backend](https://img.shields.io/badge/.NET_10.0-ASP.NET_Core_Web_API-512BD4?style=for-the-badge&logo=dotnet)
-![Security](https://img.shields.io/badge/IdentityServer-OpenID_Connect-FF69B4?style=for-the-badge&logo=auth0)
-![Database](https://img.shields.io/badge/MSSQL_Server-Enterprise_Ready-CC2927?style=for-the-badge&logo=microsoft-sql-server)
+![Architecture](https://img.shields.io/badge/Architecture-Monorepo_/_N--Tier-blueviolet?style=for-the-badge&logo=architecture)
+![Backend](https://img.shields.io/badge/.NET_10.0-Sentinel_Core-512BD4?style=for-the-badge&logo=dotnet)
+![Frontend](https://img.shields.io/badge/Next.js_16-Aurora_UI-000000?style=for-the-badge&logo=next.js)
+![Design](https://img.shields.io/badge/Design-Glassmorphism_2.0-orange?style=for-the-badge)
 
-> **C# .NET 10** tabanlı, ultra-performanslı ve modüler bir Blog API ekosistemi. Bu proje, "klasik" bir blog yapısını günümüzün en ileri mühendislik standartlarıyla buluşturan, **IdentityServer** ile zırhlandırılmış bir mimari şaheserdir.
-
----
-
-## 🏛 Mimari Vizyon (The Structural Excellence)
-
-Bu sistem, **Domain-Driven Design (DDD)** ve **CQRS** prensipleri üzerine inşa edilmiştir. Gereksiz karmaşadan arındırılmış, ancak ölçeklenebilirlik noktasında tavizsiz bir yapı sunar.
-
-- **Clean Architecture:** Bağımlılıkların merkeze (Domain) doğru aktığı, test edilebilir ve sürdürülebilir yapı.
-- **IdentityServer Integration:** Admin ve kullanıcı yetkilendirmelerinde endüstri standardı olan OIDC/OAuth2 protokolleri ile tam güvenlik.
-- **Fluent Validation & MediatR:** İş mantığı ve validasyon süreçlerinde yüksek akışkanlık ve düşük bağımlılık.
+> **Sentinel & Aurora**, modern yazılım mimarisinin zirvesini temsil eden, **.NET 10**'un sarsılmaz gücü ile **Next.js 16**'nın büyüleyici estetiğinin birleştiği dijital bir başyapıttır. Bu ekosistem, karmaşık backend süreçlerini (Sentinel) ve nefes kesen kullanıcı deneyimini (Aurora) tek bir monorepo senfonisinde buluşturur.
 
 ---
 
-## 💎 Temel Özellikler (Core Engineering)
+## 🏛️ Mimari Felsefe (The Structural Vision)
 
-### 📝 Blog Yönetimi (The Content Core)
-Blog operasyonları, en düşük gecikme süresi ve en yüksek veri bütünlüğü ile kurgulanmıştır:
+Sistem, "Sıfır Hata, Maksimum Estetik" ilkesiyle iki ana güç odağı üzerine inşa edilmiştir:
 
-- **Blog Create:** Zengin içerik desteği ve SEO uyumlu slug üretimi.
-- **Blog Read:** Yüksek performanslı listeleme ve detay görünümleri (Pagination & Filtering).
-- **Blog Update:** Dinamik içerik revizyonları.
-- **Blog Delete:** Güvenli ve izlenebilir veri silme süreçleri (Soft/Hard Delete support).
+### 🛡️ Sentinel Engine (The Backend)
+Arka plandaki koruyucu güç. .NET 10 üzerine inşa edilen bu katman, veriyi sadece işlemez; onu korur ve en saf haliyle frontend'e aktarır.
+- **N-Tier Separation:** DataAccess, Business ve Entity katmanları arasında keskin ayrım.
+- **Result Pattern Implementation:** Tüm yanıtlar `IDataResult` ve `IResult` standartlarıyla, frontend için öngörülebilir bir yapıda döner.
+- **Sentinel Auth:** Duende IdentityServer tabanlı, JWT ile zırhlandırılmış RBAC (Role-Based Access Control) mekanizması.
 
-### 🔐 Admin & Güvenlik (Sentinel Protocol)
-- **Admin Authentication:** IdentityServer ile tokenize edilmiş giriş mekanizması.
-- **Role-Based Access Control (RBAC):** Sadece yetkili mimarların (Admin) içeriğe müdahale edebildiği katmanlı güvenlik sistemi.
-- **JWT Protection:** Her API çağrısında pürüzsüz ve güvenli doğrulama.
+### 🎨 Aurora UI (The Frontend)
+Ön plandaki ışık. Next.js 16 (App Router) ile kurgulanan bu katman, dijital bir camın arkasındaymışsınız hissi veren **Glassmorphism 2.0** tasarım dilini kullanır.
+- **Ultra-Glassmorphism:** `backdrop-filter: blur(40px)` ve pürüzsüz `saturate` değerleriyle üst düzey derinlik.
+- **Aurora Animations:** Framer Motion ile kurgulanmış, `stiffness: 100` ve `damping: 20` değerlerine sahip kusursuz yay animasyonları.
+- **Global Context Architecture:** Dil (TR/EN) ve Auth durumları uygulama genelinde akışkan bir şekilde yönetilir.
+
+---
+
+## 📂 Proje Yapısı (Project Ecosystem)
+
+```text
+blogWithAPI/
+├── 🛡️ Sentinel Core (Backend)
+│   ├── blogWithAPI/                # API Controllers & Deployment Config
+│   ├── blogWithAPI.BusinessLayer/  # Logic, Result Pattern & Validation
+│   ├── blogWithAPI.DataAccessLayer/# EF Core, SQLite & Repositories
+│   └── blogWithAPI.Entity/         # Entities, DTOs & Global Models
+│
+└── 🎨 Aurora UI (Frontend)
+    ├── src/app/                    # Next.js Pages (Auth, Admin, Blog)
+    ├── src/components/             # Premium Glassmorphic UI Components
+    ├── src/contexts/               # Global State (Language & Auth)
+    └── src/services/               # High-Performance API Integration
+```
 
 ---
 
 ## 🚀 Teknoloji Stack'i (The 2026 Toolkit)
 
-| Katman | Teknoloji | Amaç |
+| Bileşen | Teknoloji | Amaç |
 | :--- | :--- | :--- |
-| **Backend** | .NET Core Web API (v10) | Core Logic |
-| **Auth** | IdentityServer / Duende | Security & Identity |
-| **ORM** | Entity Framework Core | Database Mapping |
-| **Storage** | Microsoft SQL Server (MSSQL) | Enterprise Data |
-| **Patterns** | CQRS + MediatR | Scaling & Flow |
-| **Validation** | FluentValidation | Data Integrity |
+| **Runtime** | .NET 10.0 / Node.js 22+ | Modern Execution Environment |
+| **Framework** | Next.js 16 (React 19) | Frontend Symphony |
+| **Security** | Duende IdentityServer 7 | Enterprise Security |
+| **Storage** | Entity Framework Core / SQLite | Persistence & Speed |
+| **Animation** | Framer Motion | Fluid Motion Design |
+| **Styling** | Vanilla CSS / Glassmorphism | Aesthetic Excellence |
 
 ---
 
-## 🛠 Kurulum (Assembly Guide)
+## 🛠️ Kurulum Rehberi (Assembly Guide)
 
-1.  **Repository'i Klonlayın:**
-    ```bash
-    git clone https://github.com/username/blog-api-core.git
-    ```
-2.  **Bağımlılıkları Yükleyin:**
-    ```bash
-    dotnet restore
-    ```
-3.  **Veritabanı Migrasyonlarını Uygulayın:**
-    ```bash
-    dotnet ef database update
-    ```
-4.  **Sistemi Ateşleyin:**
-    ```bash
-    dotnet run --project BlogAPI.WebAPI
-    ```
+### 1. Ekosistemi Klonlayın
+```bash
+git clone https://github.com/denizpekova/blogWithAPIs.git
+cd blogWithAPIs
+```
+
+### 2. Sentinel Core (Backend) Aktivasyonu
+```bash
+cd blogWithAPI
+dotnet build
+dotnet run
+```
+
+### 3. Aurora UI (Frontend) Aktivasyonu
+```bash
+cd frontend/blog
+npm install
+npm run dev
+```
 
 ---
 
-## 🎨 UI/UX Notu: Glassmorphism 2.0
-Bu API, **Glassmorphism 2.0** prensipleriyle tasarlanmış modern frontend yapıları için optimize edilmiştir. API response yapıları, pürüzsüz animasyonlar ve anlık veri senkronizasyonu için tasarlanmıştır.
+## 🌐 Dağıtım & Yayın (Deployment)
+Sistem, IIS ve Plesk ortamları için optimize edilmiş `web.config` yapılandırmalarına sahiptir. Üretim build'leri için:
+- **Backend:** `dotnet publish -c Release`
+- **Frontend:** `npm run build`
 
 ---
 
 <p align="center">
-  <i>"Kod, sadece bir talimat seti değil; dijital bir sanattır."</i><br>
-  <b>2026 © Core Architecture Collective</b>
+  <i>"Kod sadece bir araç değil, dijital bir sanattır."</i><br>
+  <b>2026 © MT Development<b>
 </p>
