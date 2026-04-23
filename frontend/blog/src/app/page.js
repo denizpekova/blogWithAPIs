@@ -52,7 +52,8 @@ export default function Home() {
             ...item,
             image: item.imageUrl || item.image,
             date: item.createdDate ? new Date(item.createdDate).toLocaleDateString() : item.date,
-            summary: item.content || item.summary
+            summary: item.content || item.summary,
+            category: item.category || 'YAZILIM & YAPAY ZEKA & SİBER GÜVENLİK'
           }));
           setPosts(mappedData);
         } else if (Array.isArray(response)) {
@@ -131,7 +132,7 @@ export default function Home() {
                       </div>
                       <div className="bento-content">
                         <div className="bento-meta">
-                          <span className="bento-tag">{t.tag}</span>
+                          <span className="bento-tag">{post.category}</span>
                           <span className="bento-meta-item"><Clock size={12} /> {post.date}</span>
                         </div>
                         <h3 className="bento-title">{post.title}</h3>

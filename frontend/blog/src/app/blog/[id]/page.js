@@ -32,7 +32,8 @@ export default function ArchitectBlogDetail() {
             content: item.blogContent || item.content || item.Content,
             author: item.blogAuthor || item.author || item.Author || 'Admin',
             date: item.blogDate || item.createdDate || item.CreatedDate ? new Date(item.blogDate || item.createdDate || item.CreatedDate).toLocaleDateString() : 'Bilinmiyor',
-            image: item.blogImage || item.imageUrl || item.ImageUrl || item.image
+            image: item.blogImage || item.imageUrl || item.ImageUrl || item.image,
+            category: item.category || item.Category || 'YAZILIM & YAPAY ZEKA & SİBER GÜVENLİK'
           });
         }
       } catch (err) {
@@ -93,7 +94,7 @@ export default function ArchitectBlogDetail() {
             transition={{ ...spring, delay: 0.1 }}
             className="meta-cluster"
           >
-             <span className="crystal-badge">BLOG İÇERİĞİ</span>
+             <span className="crystal-badge">{post.category}</span>
              <span className="meta-info"><Clock size={14} /> {post.date}</span>
              <span className="meta-info"><User size={14} /> {post.author}</span>
           </motion.div>

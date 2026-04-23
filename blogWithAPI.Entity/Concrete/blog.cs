@@ -15,6 +15,7 @@ namespace blogWithAPI.Entity.Concrete
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public required string ImageUrl { get; set; }
+        public string Category { get; set; } = "YAZILIM & YAPAY ZEKA & SİBER GÜVENLİK";
         
     }
 }

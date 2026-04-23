@@ -63,6 +63,7 @@ export default function EditPost({ params }) {
         Content: formData.content,
         ImageUrl: formData.image,
         Author: formData.author,
+        Category: "YAZILIM & YAPAY ZEKA & SİBER GÜVENLİK",
         CreatedDate: new Date(formData.createdDate).toISOString(),
         UpdatedDate: new Date().toISOString()
       };
