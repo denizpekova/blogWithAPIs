@@ -1,4 +1,6 @@
 using blogWithAPI.Entity.Concrete;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,12 +10,13 @@ using System.Threading.Tasks;
 
 namespace blogWithAPI.DataAccessLayer.Concrete
 {
-    public class Context : DbContext
+    public class Context : IdentityDbContext<AppUser, AppRole, int>
     {
         public Context(DbContextOptions<Context> options) : base(options)
         {
         }
 
         public DbSet<blog> Blogs { get; set; }
+
     }
 }

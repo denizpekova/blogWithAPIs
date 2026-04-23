@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using blogWithAPI.BusinessLayer.Abstract;
 using blogWithAPI.Entity.Concrete;
 using blogWithAPI.Entity.Results;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace blogWithAPI.Controllers
@@ -40,6 +41,7 @@ namespace blogWithAPI.Controllers
             return BadRequest(result);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("add")]
         public IActionResult Add(blog blog)
@@ -52,6 +54,7 @@ namespace blogWithAPI.Controllers
             return BadRequest(result);
         }
 
+        [Authorize]
         [HttpPut]
         [Route("update")]
         public IActionResult Update(blog blog)
@@ -64,6 +67,7 @@ namespace blogWithAPI.Controllers
             return BadRequest(result);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         [Route("delete")]
         public IActionResult Delete(int id)
