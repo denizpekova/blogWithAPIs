@@ -1,7 +1,6 @@
-using BusinesssLayer.Abstrack;
-using DataAccessLayerr.Abstrack;
-using EntityLayerr.Concrate;
-using EntityLayerr.Models;
+using blogWithAPI.BusinessLayer.Abstract;
+using blogWithAPI.DataAccessLayer.Abstract;
+using blogWithAPI.Entity.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -20,9 +19,9 @@ namespace blogWithAPI.BusinessLayer.Concrate
             _blogRepository = blogRepository;
         }
 
-        public void Add(blog blog)
+        public blog Add(blog blog)
         {
-            _blogRepository.Add(blog);
+            return _blogRepository.Add(blog);
         }
 
         public void Delete(int id)

@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using blogWithAPI.BusinessLayer.Abstract;
+using blogWithAPI.Entity.Concrete;
 
 namespace blogWithAPI.Controllers
 {
