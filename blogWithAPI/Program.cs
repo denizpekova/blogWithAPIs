@@ -15,6 +15,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<Context>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddIdentity<AppUser, AppRole>()
     .AddEntityFrameworkStores<Context>()
     .AddDefaultTokenProviders();
@@ -37,7 +48,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = "http://localhost:5279";
+        options.Authority = "http://blog.mtapi.com.tr";
         options.Audience = "blogapi";
         options.RequireHttpsMetadata = false;
     });
@@ -55,6 +66,7 @@ var app = builder.Build();
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
+app.UseCors("AllowFrontend");
 app.UseIdentityServer();
 app.UseAuthentication();
 app.UseAuthorization();
