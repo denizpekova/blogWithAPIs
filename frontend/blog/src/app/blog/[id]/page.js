@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Share2, Bookmark, Clock, User, ArrowLeft, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { apiService } from '@/services/api';
+import { useLanguage } from '@/contexts/LanguageContext';
 import ReactMarkdown from 'react-markdown';
 import './blog.css';
 
@@ -18,6 +19,12 @@ export default function ArchitectBlogDetail() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { lang } = useLanguage();
+
+  const categoryMap = {
+    tr: "TEKNOLOJİ & SİBER",
+    en: "TECH & CYBER"
+  };
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -33,7 +40,7 @@ export default function ArchitectBlogDetail() {
             author: item.blogAuthor || item.author || item.Author || 'Admin',
             date: item.blogDate || item.createdDate || item.CreatedDate ? new Date(item.blogDate || item.createdDate || item.CreatedDate).toLocaleDateString() : 'Bilinmiyor',
             image: item.blogImage || item.imageUrl || item.ImageUrl || item.image,
-            category: item.category || item.Category || 'YAZILIM & YAPAY ZEKA & SİBER GÜVENLİK'
+            category: categoryMap[lang] || categoryMap.tr
           });
         }
       } catch (err) {

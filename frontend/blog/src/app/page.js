@@ -27,7 +27,8 @@ export default function Home() {
       latest: "Son Yazılar",
       prevBtn: "Önceki Bölüm",
       nextBtn: "Sonraki Bölüm",
-      tag: "Yapay Zeka & Tasarım"
+      tag: "Yapay Zeka & Tasarım",
+      category: "TEKNOLOJİ & SİBER"
     },
     en: {
       heroTitle: <>The Future of <br /> Digital Expression.</>,
@@ -35,7 +36,8 @@ export default function Home() {
       latest: "Latest Intel",
       prevBtn: "Previous Sector",
       nextBtn: "Next Sector",
-      tag: "AI & Design"
+      tag: "AI & Design",
+      category: "TECH & CYBER"
     }
   };
 
@@ -53,7 +55,7 @@ export default function Home() {
             image: item.imageUrl || item.image,
             date: item.createdDate ? new Date(item.createdDate).toLocaleDateString() : item.date,
             summary: item.content || item.summary,
-            category: item.category || 'YAZILIM & YAPAY ZEKA & SİBER GÜVENLİK'
+            category: t.category
           }));
           setPosts(mappedData);
         } else if (Array.isArray(response)) {
