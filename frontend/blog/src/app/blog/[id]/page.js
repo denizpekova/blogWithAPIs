@@ -50,7 +50,7 @@ export default function ArchitectBlogDetail() {
       }
     };
     fetchPost();
-  }, [id]);
+  }, [id, lang]);
 
   if (loading) {
     return (

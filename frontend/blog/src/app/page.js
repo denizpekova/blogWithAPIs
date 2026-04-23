@@ -68,7 +68,7 @@ export default function Home() {
       }
     };
     fetchPosts();
-  }, []);
+  }, [lang]);
 
   return (
     <div className="home-wrapper">
