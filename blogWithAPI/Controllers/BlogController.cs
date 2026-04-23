@@ -9,11 +9,11 @@ namespace blogWithAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class BlogController : ControllerBase
     {
         private readonly IBlogService _blogService;
 
-        public WeatherForecastController(IBlogService blogService)
+        public BlogController(IBlogService blogService)
         {
             _blogService = blogService;
         }
