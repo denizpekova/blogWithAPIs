@@ -367,3 +367,6 @@ include_vs_join_guide.md
 unit_testing_guide.md
 *.zip
 sha256_security_guide.md
+*.db
+*.db-shm
+*.db-wal
