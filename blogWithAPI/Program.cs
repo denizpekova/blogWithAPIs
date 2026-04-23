@@ -2,6 +2,7 @@ using blogWithAPI.DataAccessLayer.Concrete;
 using blogWithAPI.DataAccessLayer.Abstract;
 using blogWithAPI.BusinessLayer.Abstract;
 using blogWithAPI.BusinessLayer.Concrate;
+using blogWithAPI.Handlers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,11 @@ builder.Services.AddDbContext<Context>(options =>
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 builder.Services.AddScoped<IBlogService, BlogManager>();
 
+// Global Exception Handler Kaydı
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,6 +32,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

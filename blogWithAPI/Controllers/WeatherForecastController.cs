@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using blogWithAPI.BusinessLayer.Abstract;
 using blogWithAPI.Entity.Concrete;
+using blogWithAPI.Entity.Results;
+
 
 namespace blogWithAPI.Controllers
 {
@@ -18,38 +20,60 @@ namespace blogWithAPI.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(_blogService.GetAll());
+           var result = _blogService.GetAll();
+           if(result.IsSuccess)
+           {
+            return Ok(result);
+           }
+           return BadRequest(result);
         }
 
         [HttpGet("{id}")]
         [Route("getbyid")]
         public IActionResult GetById(int id)
         {
-            return Ok(_blogService.GetById(id));
+            var result = _blogService.GetById(id);
+            if(result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
 
         [HttpPost]
         [Route("add")]
         public IActionResult Add(blog blog)
         {
-            _blogService.Add(blog);
-            return Ok();
+            var result = _blogService.Add(blog);
+            if(result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
 
         [HttpPut]
         [Route("update")]
         public IActionResult Update(blog blog)
         {
-            _blogService.Update(blog);
-            return Ok();
+            var result = _blogService.Update(blog);
+            if(result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
 
         [HttpDelete("{id}")]
         [Route("delete")]
         public IActionResult Delete(int id)
         {
-            _blogService.Delete(id);
-            return Ok();
+            var result = _blogService.Delete(id);
+            if(result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
     }
 }

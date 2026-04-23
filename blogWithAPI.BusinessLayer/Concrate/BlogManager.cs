@@ -1,5 +1,6 @@
 using blogWithAPI.BusinessLayer.Abstract;
 using blogWithAPI.DataAccessLayer.Abstract;
+using blogWithAPI.Entity.Results;
 using blogWithAPI.Entity.Concrete;
 using System;
 using System.Collections.Generic;
@@ -19,29 +20,32 @@ namespace blogWithAPI.BusinessLayer.Concrate
             _blogRepository = blogRepository;
         }
 
-        public blog Add(blog blog)
+        public IResult Add(blog blog)
         {
-            return _blogRepository.Add(blog);
+            _blogRepository.Add(blog);
+            return new SuccessResult("added successfully");
         }
 
-        public void Delete(int id)
+        public IResult Delete(int id)
         {
             _blogRepository.Delete(id);
+            return new SuccessResult("deleted successfully");
+        }   
+
+        public IDataResult<List<blog>> GetAll()
+        {
+            return new SuccessDataResult<List<blog>>(_blogRepository.GetAll(), "listed successfully");
         }
 
-        public List<blog> GetAll()
+        public IDataResult<blog> GetById(int id)
         {
-            return _blogRepository.GetAll();
+            return new SuccessDataResult<blog>(_blogRepository.GetById(id), "listed successfully");
         }
 
-        public blog GetById(int id)
+        public IResult Update(blog blog)
         {
-            return _blogRepository.GetById(id);
-        }
-
-        public blog Update(blog blog)
-        {
-            return _blogRepository.Update(blog);
+            _blogRepository.Update(blog);
+            return new SuccessResult("updated successfully");
         }
     }
 }

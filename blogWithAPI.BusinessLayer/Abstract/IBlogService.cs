@@ -1,16 +1,17 @@
 ﻿
 using blogWithAPI.Entity.Concrete;
 using System.Collections.Generic;
+using blogWithAPI.Entity.Results;
 
 namespace blogWithAPI.BusinessLayer.Abstract
 {
     public interface IBlogService
     {
-        List<blog> GetAll();
-        blog GetById(int id);
-        blog Add(blog blog);
-        blog Update(blog blog);
-        void Delete(int id);
+        IDataResult<List<blog>> GetAll();
+        IDataResult<blog> GetById(int id);
+        IResult Add(blog blog);
+        IResult Update(blog blog);
+        IResult Delete(int id);
     }
 
 }
