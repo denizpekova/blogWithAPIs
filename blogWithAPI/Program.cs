@@ -12,8 +12,15 @@ using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Veritabanı ve Identity Servisleri
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (connectionString != null && connectionString.Contains("blog.db") && !connectionString.Contains("/"))
+{
+    var dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "blog.db");
+    connectionString = $"Data Source={dbPath}";
+}
+
 builder.Services.AddDbContext<Context>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(connectionString));
 
 builder.Services.AddCors(options =>
 {
