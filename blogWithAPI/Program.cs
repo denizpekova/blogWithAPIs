@@ -1,4 +1,7 @@
 using blogWithAPI.DataAccessLayer.Concrete;
+using blogWithAPI.DataAccessLayer.Abstract;
+using blogWithAPI.BusinessLayer.Abstract;
+using blogWithAPI.BusinessLayer.Concrate;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +14,9 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<Context>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+builder.Services.AddScoped<IBlogService, BlogManager>();
 
 var app = builder.Build();
 
