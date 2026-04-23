@@ -22,6 +22,7 @@ namespace blogWithAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Route("getbyid")]
         public IActionResult GetById(int id)
         {
             return Ok(_blogService.GetById(id));
@@ -36,6 +37,7 @@ namespace blogWithAPI.Controllers
         }
 
         [HttpPut]
+        [Route("update")]
         public IActionResult Update(blog blog)
         {
             _blogService.Update(blog);
@@ -43,6 +45,7 @@ namespace blogWithAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Route("delete")]
         public IActionResult Delete(int id)
         {
             _blogService.Delete(id);
