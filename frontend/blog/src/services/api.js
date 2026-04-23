@@ -49,9 +49,9 @@ export const apiService = {
     try { return text ? JSON.parse(text) : null; } catch (e) { return null; }
   },
 
-  async put(endpoint, id, data) {
+  async put(endpoint, data) {
     if (IS_MOCK) return { success: true };
-    const res = await fetch(`${API_BASE_URL}${endpoint}/${id}`, {
+    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: 'PUT',
       headers: { 
         'Content-Type': 'application/json',

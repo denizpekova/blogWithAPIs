@@ -93,7 +93,9 @@ export default function AdminDashboard() {
                   <div className="col-author">{post.author}</div>
                   <div className="col-date">{post.date}</div>
                   <div className="col-actions">
-                    <button className="action-pill edit-pill"><Edit3 size={16} /> Düzenle</button>
+                    <Link href={`/admin/edit/${post.id}`} className="action-pill edit-pill">
+                      <Edit3 size={16} /> Düzenle
+                    </Link>
                     <button className="action-pill delete-pill" onClick={() => handleDelete(post.id)}><Trash2 size={16} /> Sil</button>
                   </div>
                 </motion.div>
