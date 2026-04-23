@@ -44,7 +44,7 @@ namespace blogWithAPI.Controllers
         [Authorize]
         [HttpPost]
         [Route("add")]
-        public IActionResult Add(blog blog)
+        public IActionResult Add(Blog blog)
         {
             var result = _blogService.Add(blog);
             if(result.IsSuccess)
@@ -57,7 +57,7 @@ namespace blogWithAPI.Controllers
         [Authorize]
         [HttpPut]
         [Route("update")]
-        public IActionResult Update(blog blog)
+        public IActionResult Update(Blog blog)
         {
             var result = _blogService.Update(blog);
             if(result.IsSuccess)

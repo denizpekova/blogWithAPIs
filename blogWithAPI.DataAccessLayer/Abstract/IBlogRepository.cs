@@ -1,4 +1,4 @@
-﻿
+
 using blogWithAPI.Entity.Concrete;
 using System.Collections.Generic;
 
@@ -6,10 +6,10 @@ namespace blogWithAPI.DataAccessLayer.Abstract
 {
     public interface IBlogRepository
     {
-        List<blog> GetAll();
-        blog GetById(int id);
-        blog Add(blog blog);
-        blog Update(blog blog);
+        List<Blog> GetAll();
+        Blog? GetById(int id);
+        Blog Add(Blog blog);
+        Blog Update(Blog blog);
         void Delete(int id);
     }
 

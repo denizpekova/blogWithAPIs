@@ -17,24 +17,24 @@ namespace blogWithAPI.DataAccessLayer.Concrete
             _context = context;
         }
 
-        public blog Add(blog blog)
+        public Blog Add(Blog blog)
         {
             _context.Blogs.Add(blog);
             _context.SaveChanges();
             return blog;
         }
 
-        public List<blog> GetAll()
+        public List<Blog> GetAll()
         {
             return _context.Blogs.ToList();
         }
 
-        public blog GetById(int id)
+        public Blog? GetById(int id)
         {
             return _context.Blogs.FirstOrDefault(x => x.Id == id);
         }
 
-        public blog Update(blog blog)
+        public Blog Update(Blog blog)
         {
             _context.Blogs.Update(blog);
             _context.SaveChanges();

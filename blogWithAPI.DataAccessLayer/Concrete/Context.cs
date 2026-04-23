@@ -16,7 +16,7 @@ namespace blogWithAPI.DataAccessLayer.Concrete
         {
         }
 
-        public DbSet<blog> Blogs { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
 
     }
 }

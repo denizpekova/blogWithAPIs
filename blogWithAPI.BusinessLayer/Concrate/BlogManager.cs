@@ -20,7 +20,7 @@ namespace blogWithAPI.BusinessLayer.Concrate
             _blogRepository = blogRepository;
         }
 
-        public IResult Add(blog blog)
+        public IResult Add(Blog blog)
         {
             _blogRepository.Add(blog);
             return new SuccessResult("added successfully");
@@ -32,17 +32,17 @@ namespace blogWithAPI.BusinessLayer.Concrate
             return new SuccessResult("deleted successfully");
         }   
 
-        public IDataResult<List<blog>> GetAll()
+        public IDataResult<List<Blog>> GetAll()
         {
-            return new SuccessDataResult<List<blog>>(_blogRepository.GetAll(), "listed successfully");
+            return new SuccessDataResult<List<Blog>>(_blogRepository.GetAll(), "listed successfully");
         }
 
-        public IDataResult<blog> GetById(int id)
+        public IDataResult<Blog> GetById(int id)
         {
-            return new SuccessDataResult<blog>(_blogRepository.GetById(id), "listed successfully");
+            return new SuccessDataResult<Blog>(_blogRepository.GetById(id), "listed successfully");
         }
 
-        public IResult Update(blog blog)
+        public IResult Update(Blog blog)
         {
             _blogRepository.Update(blog);
             return new SuccessResult("updated successfully");

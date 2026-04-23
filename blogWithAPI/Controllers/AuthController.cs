@@ -61,7 +61,7 @@ namespace blogWithAPI.Controllers
 
             var client = _httpClientFactory.CreateClient();
             var discovery = await client.GetDiscoveryDocumentAsync("http://blog.mtapi.com.tr");
-            if (discovery.IsError) return BadRequest(new ErrorResult(discovery.Error));
+            if (discovery.IsError) return BadRequest(new ErrorResult(discovery.Error ?? "Discovery hatası oluştu."));
 
             var tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
