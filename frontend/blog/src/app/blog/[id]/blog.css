@@ -385,3 +385,75 @@
     font-size: clamp(2.5rem, 8vw, 3.5rem);
   }
 }
+
+/* MARKDOWN RENDER STYLES */
+.content-rendered h1, 
+.content-rendered h2, 
+.content-rendered h3 {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  color: #fff;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.content-rendered h1 { font-size: 2.5rem; }
+.content-rendered h2 { font-size: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+.content-rendered h3 { font-size: 1.5rem; }
+
+.content-rendered p {
+  margin-bottom: 1.5rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.8;
+}
+
+.content-rendered ul, 
+.content-rendered ol {
+  margin-bottom: 2rem;
+  padding-left: 1.5rem;
+}
+
+.content-rendered li {
+  margin-bottom: 0.5rem;
+}
+
+.content-rendered blockquote {
+  border-left: 4px solid #fff;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem 2rem;
+  margin: 2rem 0;
+  font-style: italic;
+  border-radius: 0 16px 16px 0;
+}
+
+.content-rendered code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9em;
+  color: #00d4ff;
+}
+
+.content-rendered pre {
+  background: #0d0d0d !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 1.5rem;
+  border-radius: 16px;
+  overflow-x: auto;
+  margin: 2rem 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.content-rendered pre code {
+  background: transparent;
+  padding: 0;
+  color: #e0e0e0;
+  display: block;
+  line-height: 1.5;
+}
+
+.content-rendered hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 3rem 0;
+}

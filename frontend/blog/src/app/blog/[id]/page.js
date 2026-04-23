@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Share2, Bookmark, Clock, User, ArrowLeft, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { apiService } from '@/services/api';
+import ReactMarkdown from 'react-markdown';
 import './blog.css';
 
 const spring = {
@@ -141,8 +142,10 @@ export default function ArchitectBlogDetail() {
           className="article-body"
         >
           <div className="rich-text-content">
-            <div className="content-rendered" style={{ whiteSpace: 'pre-wrap', lineHeight: '1.8' }}>
-              {post.content}
+            <div className="content-rendered">
+              <ReactMarkdown>
+                {post.content}
+              </ReactMarkdown>
             </div>
           </div>
         </motion.main>

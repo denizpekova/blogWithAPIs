@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# Custom Guides (Local Only)
+pagination_guide.md
+include_vs_join_guide.md
+unit_testing_guide.md
