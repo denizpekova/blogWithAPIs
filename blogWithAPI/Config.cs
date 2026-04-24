@@ -30,6 +30,7 @@ namespace blogWithAPI
                 ClientId = "blogClient",
                 ClientName = "Blog API Client",
                 AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                AllowOfflineAccess = true,
                 ClientSecrets = { new Secret("secret".Sha256()) },
                 AllowedScopes = { "blogapi", "openid", "profile" }
             }

@@ -18,5 +18,7 @@ namespace blogWithAPI.DataAccessLayer.Concrete
 
         public DbSet<Blog> Blogs { get; set; }
 
+        public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
+
     }
 }

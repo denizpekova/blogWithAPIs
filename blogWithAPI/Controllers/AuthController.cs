@@ -9,6 +9,8 @@ using Duende.IdentityModel.Client;
 
 
 using System.Security.Claims;
+using blogWithAPI.DataAccessLayer.Concrete;
+using Microsoft.EntityFrameworkCore;
 
 namespace blogWithAPI.Controllers
 {
@@ -20,13 +22,15 @@ namespace blogWithAPI.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<AppRole> _roleManager;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly Context _context;
 
-        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IHttpClientFactory httpClientFactory)
+        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IHttpClientFactory httpClientFactory, Context context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _httpClientFactory = httpClientFactory;
+            _context = context;
         }
         
         [HttpPost("register")]
@@ -89,17 +93,74 @@ namespace blogWithAPI.Controllers
                 Password = loginDto.Password,
                 ClientId = "blogClient",
                 ClientSecret = "secret",
-                Scope = "blogapi"
+                Scope = "blogapi offline_access"
             });
 
             if (tokenResponse.IsError) return BadRequest(new ErrorResult("Token alınamadı: " + tokenResponse.Error));
 
-            return Ok(new SuccessDataResult<object>(new 
+            var refreshToken = new UserRefreshToken
             {
-                 Token = tokenResponse.AccessToken,
-                 ExpiresIn = tokenResponse.ExpiresIn,
-                 User = user.UserName
+                Code = tokenResponse.RefreshToken ?? Guid.NewGuid().ToString(),
+                UserId = user.Id,
+                Expiration = DateTime.Now.AddDays(7)
+            };
+
+            _context.UserRefreshTokens.Add(refreshToken);
+            await _context.SaveChangesAsync();
+
+            return Ok(new SuccessDataResult<TokenResponseDTO>(new TokenResponseDTO
+            {
+                 AccessToken = tokenResponse.AccessToken,
+                 RefreshToken = refreshToken.Code,
+                 Expiration = DateTime.Now.AddSeconds(tokenResponse.ExpiresIn)
             }, "Token başarıyla alındı."));
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken(string refreshTokenCode)
+        {
+            var existToken = await _context.UserRefreshTokens
+                .FirstOrDefaultAsync(x => x.Code == refreshTokenCode);
+
+            if (existToken == null || existToken.Expiration < DateTime.Now)
+            {
+                return BadRequest(new ErrorResult("Refresh token geçersiz veya süresi dolmuş."));
+            }
+
+            var user = await _userManager.FindByIdAsync(existToken.UserId);
+            if (user == null) return BadRequest(new ErrorResult("Kullanıcı bulunamadı."));
+
+            var client = _httpClientFactory.CreateClient();
+            var authority = HttpContext.Request.Host.Host == "localhost" 
+                ? "http://localhost:5279" 
+                : "http://blog.mtapi.com.tr";
+
+            var discovery = await client.GetDiscoveryDocumentAsync(authority);
+            if (discovery.IsError) return BadRequest(new ErrorResult(discovery.Error ?? "Discovery hatası oluştu."));
+
+            var tokenResponse = await client.RequestRefreshTokenAsync(new RefreshTokenRequest
+            {
+                Address = discovery.TokenEndpoint,
+                ClientId = "blogClient",
+                ClientSecret = "secret",
+                RefreshToken = existToken.Code
+            });
+            
+            if (tokenResponse.IsError) return BadRequest(new ErrorResult("Token yenilenemedi: " + tokenResponse.Error));
+
+            // Token Rotation: Eski token'ı güncelle veya silip yenisini ekle
+            existToken.Code = tokenResponse.RefreshToken ?? existToken.Code;
+            existToken.Expiration = DateTime.Now.AddDays(7);
+            
+            _context.UserRefreshTokens.Update(existToken);
+            await _context.SaveChangesAsync();
+
+            return Ok(new SuccessDataResult<TokenResponseDTO>(new TokenResponseDTO
+            {
+                AccessToken = tokenResponse.AccessToken,
+                RefreshToken = existToken.Code,
+                Expiration = DateTime.Now.AddSeconds(tokenResponse.ExpiresIn)
+            }, "Token başarıyla yenilendi."));
         }
 
         [HttpGet("me")]
