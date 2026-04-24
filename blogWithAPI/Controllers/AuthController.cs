@@ -48,12 +48,12 @@ namespace blogWithAPI.Controllers
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (result.Succeeded)
             {
-                // Admin rolü yoksa oluştur
+
                 if (!await _roleManager.RoleExistsAsync("Admin"))
                 {
                     await _roleManager.CreateAsync(new AppRole { Name = "Admin" });
                 }
-                // Kullanıcıya Admin rolünü ata
+                
                 await _userManager.AddToRoleAsync(user, "Admin");
 
                 return Ok(new SuccessResult("Kullanıcı başarıyla kaydedildi ve Admin olarak atandı."));
@@ -78,7 +78,6 @@ namespace blogWithAPI.Controllers
 
             var client = _httpClientFactory.CreateClient();
             
-            // İstek localhost'tan geliyorsa localhost'u, değilse domaini kullan
             var authority = HttpContext.Request.Host.Host == "localhost" 
                 ? "http://localhost:5279" 
                 : "http://blog.mtapi.com.tr";
@@ -148,7 +147,6 @@ namespace blogWithAPI.Controllers
             
             if (tokenResponse.IsError) return BadRequest(new ErrorResult("Token yenilenemedi: " + tokenResponse.Error));
 
-            // Token Rotation: Eski token'ı güncelle veya silip yenisini ekle
             existToken.Code = tokenResponse.RefreshToken ?? existToken.Code;
             existToken.Expiration = DateTime.Now.AddDays(7);
             
