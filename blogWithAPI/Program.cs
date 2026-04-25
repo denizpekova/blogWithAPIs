@@ -67,8 +67,9 @@ builder.Services.AddAuthentication(options => {
 })
     .AddJwtBearer(options =>
     {
-        options.Authority = "http://localhost:5000";
-        options.MetadataAddress = "http://localhost:5000/.well-known/openid-configuration"; 
+        var identityConfig = builder.Configuration.GetSection("Identity");
+        options.Authority = identityConfig["Authority"];
+        options.MetadataAddress = identityConfig["InternalMetadata"]; 
             
         options.Audience = "blogapi";
         options.RequireHttpsMetadata = false;
@@ -77,7 +78,7 @@ builder.Services.AddAuthentication(options => {
         {
             ValidateAudience = false,
             ValidateIssuer = true,
-            ValidIssuer = "http://localhost:5000",
+            ValidIssuer = identityConfig["Authority"],
             ValidateLifetime = true
         };
 

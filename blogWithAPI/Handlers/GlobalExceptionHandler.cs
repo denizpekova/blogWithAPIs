@@ -13,7 +13,7 @@ namespace blogWithAPI.Handlers
             {
                 Status = StatusCodes.Status500InternalServerError,
                 Title = "Sunucu Hatası",
-                Detail = "Beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+                Detail = exception.Message + (exception.InnerException != null ? " | Inner: " + exception.InnerException.Message : ""),
                 Instance = httpContext.Request.Path,
             };
 

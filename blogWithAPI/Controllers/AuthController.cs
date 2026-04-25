@@ -23,14 +23,16 @@ namespace blogWithAPI.Controllers
         private readonly RoleManager<AppRole> _roleManager;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly Context _context;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IHttpClientFactory httpClientFactory, Context context)
+        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IHttpClientFactory httpClientFactory, Context context, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _httpClientFactory = httpClientFactory;
             _context = context;
+            _configuration = configuration;
         }
         
         [HttpPost("register")]
@@ -78,12 +80,12 @@ namespace blogWithAPI.Controllers
 
             var client = _httpClientFactory.CreateClient("InsecureClient");
             
-            var authority = "http://localhost:5000";
+            var authority = _configuration["Identity:Authority"];
             
             var discovery = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
             {
                 Address = authority,
-                Policy = new Duende.IdentityModel.Client.DiscoveryPolicy { RequireHttps = false }
+                Policy = new Duende.IdentityModel.Client.DiscoveryPolicy { RequireHttps = authority.StartsWith("https") }
             });
             if (discovery.IsError) return BadRequest(new ErrorResult(discovery.Error ?? "Discovery hatası oluştu."));
 
@@ -132,12 +134,12 @@ namespace blogWithAPI.Controllers
             if (user == null) return BadRequest(new ErrorResult("Kullanıcı bulunamadı."));
 
             var client = _httpClientFactory.CreateClient("InsecureClient");
-            var authority = "http://localhost:5000";
+            var authority = _configuration["Identity:Authority"];
 
             var discovery = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
             {
                 Address = authority,
-                Policy = new Duende.IdentityModel.Client.DiscoveryPolicy { RequireHttps = false }
+                Policy = new Duende.IdentityModel.Client.DiscoveryPolicy { RequireHttps = authority.StartsWith("https") }
             });
             if (discovery.IsError) return BadRequest(new ErrorResult(discovery.Error ?? "Discovery hatası oluştu."));
 

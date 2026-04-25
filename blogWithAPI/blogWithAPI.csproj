@@ -20,5 +20,11 @@
   <ItemGroup>
     <ProjectReference Include="..\blogWithAPI.BusinessLayer\blogWithAPI.BusinessLayer.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="blog.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>
