@@ -76,13 +76,15 @@ namespace blogWithAPI.Controllers
                 return BadRequest(new ErrorResult("Şifre hatalı."));
             }
 
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("InsecureClient");
             
-            var authority = HttpContext.Request.Host.Host == "localhost" 
-                ? "http://localhost:5279" 
-                : "http://blog.mtapi.com.tr";
-
-            var discovery = await client.GetDiscoveryDocumentAsync(authority);
+            var authority = "http://localhost:5000";
+            
+            var discovery = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            {
+                Address = authority,
+                RequireHttps = false // İç iletişimde localhost için HTTPS gereksiz
+            });
             if (discovery.IsError) return BadRequest(new ErrorResult(discovery.Error ?? "Discovery hatası oluştu."));
 
             var tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
@@ -129,12 +131,14 @@ namespace blogWithAPI.Controllers
             var user = await _userManager.FindByIdAsync(existToken.UserId.ToString());
             if (user == null) return BadRequest(new ErrorResult("Kullanıcı bulunamadı."));
 
-            var client = _httpClientFactory.CreateClient();
-            var authority = HttpContext.Request.Host.Host == "localhost" 
-                ? "http://localhost:5279" 
-                : "http://blog.mtapi.com.tr";
+            var client = _httpClientFactory.CreateClient("InsecureClient");
+            var authority = "http://localhost:5000";
 
-            var discovery = await client.GetDiscoveryDocumentAsync(authority);
+            var discovery = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            {
+                Address = authority,
+                RequireHttps = false // İç iletişimde localhost için HTTPS gereksiz
+            });
             if (discovery.IsError) return BadRequest(new ErrorResult(discovery.Error ?? "Discovery hatası oluştu."));
 
             var tokenResponse = await client.RequestRefreshTokenAsync(new RefreshTokenRequest

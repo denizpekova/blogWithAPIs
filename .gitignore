@@ -362,12 +362,11 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 # Custom Guides (Local Only)
-pagination_guide.md
-include_vs_join_guide.md
-unit_testing_guide.md
+*_guide.md
+*_roadmap.md
+*_setup.md
 frontend/
 *.zip
-sha256_security_guide.md
 *.db
 *.db-shm
 *.db-wal

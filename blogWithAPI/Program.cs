@@ -50,7 +50,14 @@ builder.Services.AddIdentityServer()
     .AddAspNetIdentity<AppUser>()
     .AddDeveloperSigningCredential();
 
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("InsecureClient")
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+    });
+
+builder.Services.AddHttpClient(); // Varsayılan client
+
 
 // 4. JWT Bearer (API Koruması)
 builder.Services.AddAuthentication(options => {
@@ -60,9 +67,8 @@ builder.Services.AddAuthentication(options => {
 })
     .AddJwtBearer(options =>
     {
-        options.Authority = builder.Environment.IsDevelopment() 
-            ? "http://localhost:5279" 
-            : "http://blog.mtapi.com.tr";
+        options.Authority = "http://localhost:5000";
+        options.MetadataAddress = "http://localhost:5000/.well-known/openid-configuration"; 
             
         options.Audience = "blogapi";
         options.RequireHttpsMetadata = false;
@@ -71,7 +77,7 @@ builder.Services.AddAuthentication(options => {
         {
             ValidateAudience = false,
             ValidateIssuer = true,
-            ValidIssuer = builder.Environment.IsDevelopment() ? "http://localhost:5279" : "http://blog.mtapi.com.tr",
+            ValidIssuer = "http://localhost:5000",
             ValidateLifetime = true
         };
 
