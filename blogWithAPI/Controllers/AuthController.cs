@@ -83,7 +83,7 @@ namespace blogWithAPI.Controllers
             var discovery = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
             {
                 Address = authority,
-                RequireHttps = false // İç iletişimde localhost için HTTPS gereksiz
+                Policy = new Duende.IdentityModel.Client.DiscoveryPolicy { RequireHttps = false }
             });
             if (discovery.IsError) return BadRequest(new ErrorResult(discovery.Error ?? "Discovery hatası oluştu."));
 
@@ -137,7 +137,7 @@ namespace blogWithAPI.Controllers
             var discovery = await client.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
             {
                 Address = authority,
-                RequireHttps = false // İç iletişimde localhost için HTTPS gereksiz
+                Policy = new Duende.IdentityModel.Client.DiscoveryPolicy { RequireHttps = false }
             });
             if (discovery.IsError) return BadRequest(new ErrorResult(discovery.Error ?? "Discovery hatası oluştu."));
 
