@@ -109,7 +109,7 @@ namespace blogWithAPI.Controllers
 
             return Ok(new SuccessDataResult<TokenResponseDTO>(new TokenResponseDTO
             {
-                 AccessToken = tokenResponse.AccessToken,
+                 AccessToken = tokenResponse.AccessToken ?? "",
                  RefreshToken = refreshToken.Code,
                  Expiration = DateTime.Now.AddSeconds(tokenResponse.ExpiresIn)
             }, "Token başarıyla alındı."));
@@ -126,7 +126,7 @@ namespace blogWithAPI.Controllers
                 return BadRequest(new ErrorResult("Refresh token geçersiz veya süresi dolmuş."));
             }
 
-            var user = await _userManager.FindByIdAsync(existToken.UserId);
+            var user = await _userManager.FindByIdAsync(existToken.UserId.ToString());
             if (user == null) return BadRequest(new ErrorResult("Kullanıcı bulunamadı."));
 
             var client = _httpClientFactory.CreateClient();
@@ -155,7 +155,7 @@ namespace blogWithAPI.Controllers
 
             return Ok(new SuccessDataResult<TokenResponseDTO>(new TokenResponseDTO
             {
-                AccessToken = tokenResponse.AccessToken,
+                AccessToken = tokenResponse.AccessToken ?? "",
                 RefreshToken = existToken.Code,
                 Expiration = DateTime.Now.AddSeconds(tokenResponse.ExpiresIn)
             }, "Token başarıyla yenilendi."));
