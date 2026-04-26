@@ -19,40 +19,37 @@ Sistem, "Sıfır Hata, Maksimum Güvenlik" ilkesiyle **N-Tier Architecture (Katm
 
 ---
 
-## 🛡️ Güvenlik ve Kimlik Yönetimi (The Shield)
+## 🛡️ Siber Güvenlik & Mimari Özellikler
 
-Sentiel Engine, enterprise düzeyde güvenlik protokollerini standart olarak sunar:
-- **IdentityServer Entegrasyonu:** Duende IdentityServer ile merkezi kimlik yönetimi.
-- **JWT Bearer Protection:** Tüm API uç noktaları JSON Web Token ile zırhlandırılmıştır.
-- **Result Pattern:** Tüm operasyonel yanıtlar `IDataResult` ve `IResult` standartlarıyla döner, hata yönetimi otomatiktir.
+Proje üzerinde yapılan son geliştirmelerle sistem "Pentagon" standartlarında bir güvenliğe kavuşturulmuştur:
 
----
+- **🔒 Siber Kalkan (Rate Limiting):** API uç noktaları bot saldırılarına ve Brute Force girişimlerine karşı saniyede 10 istek sınırı ile korunmaktadır.
+- **🛡️ Audit Logging (Siber Kayıt):** Sistemdeki tüm kritik hareketler (Giriş, Kayıt, Silme, Güncelleme) IP adresi ve kullanıcı bilgisiyle beraber veritabanına loglanmaktadır.
+- **🌐 Domain Independence:** Backend kodları hiçbir domain veya porta bağımlı değildir. Tüm adresler `appsettings.json` üzerinden dinamik olarak yönetilir.
 
-## 🚀 Özellikler (Core Intel)
+## 📁 Proje Yapısı
 
-- [x] **Advanced Hashing:** SHA256 tabanlı güvenli şifreleme mekanizması.
-- [x] **Markdown Engine:** Veritabanında zengin teknik içerik saklama yeteneği.
-- [x] **Dynamic Routing:** SEO dostu veri çekme ve yönetme uç noktaları.
-- [x] **Global Error Handler:** Merkezi hata yakalama ve loglama altyapısı.
+- **blogWithAPI:** Core API projesi (Controllers, Filters, IdentityServer).
+- **blogWithAPI.BusinessLayer:** İş mantığı ve loglama servisleri (AuditManager).
+- **blogWithAPI.DataAccessLayer:** Veritabanı katmanı ve Migrationlar (SQLite).
+- **blogWithAPI.Entity:** Ortak nesne modelleri (Blog, AuditLog, AppUser).
+- **frontend/blog:** Next.js tabanlı, siber estetikli kullanıcı arayüzü.
 
----
+## 🛠️ Kurulum ve Yayınlama
 
-## 🛠️ Kurulum Rehberi (Assembly Guide)
-
-### 1. Depoyu Klonlayın
+### Backend (Windows İçin):
 ```bash
-git clone https://github.com/denizpekova/blogWithAPIs.git
-cd blogWithAPIs
+dotnet publish -c Release -r win-x64 --self-contained true
+```
+Bu komut sonunda oluşan paketi sunucuya atıp `appsettings.json` içindeki domainleri güncellemeniz yeterlidir.
+
+### Veritabanı Güncelleme:
+```bash
+dotnet ef database update --project blogWithAPI.DataAccessLayer --startup-project blogWithAPI
 ```
 
-### 2. Bağımlılıkları Yükleyin ve Derleyin
-```bash
-cd blogWithAPI
-dotnet restore
-dotnet build
-```
-
-### 3. Uygulamayı Çalıştırın
+---
+*Bu proje modern siber güvenlik mimarileri ve yüksek performanslı .NET teknolojileri ile inşa edilmiştir.*
 ```bash
 dotnet run
 ```
