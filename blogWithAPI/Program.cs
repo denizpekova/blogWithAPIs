@@ -8,6 +8,8 @@ using blogWithAPI;
 using blogWithAPI.DataAccessLayer.Concrete;
 using blogWithAPI.Entity.Concrete;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,14 +24,28 @@ if (connectionString != null && connectionString.Contains("blog.db") && !connect
 builder.Services.AddDbContext<Context>(options =>
     options.UseSqlite(connectionString));
 
+// 1. Rate Limiting (Hız Sınırlama) Ayarları
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("strict", opt =>
+    {
+        opt.Window = TimeSpan.FromSeconds(10);
+        opt.PermitLimit = 10; // 10 saniyede en fazla 10 istek
+        opt.QueueLimit = 0;
+        opt.QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst;
+    });
+});
+
 builder.Services.AddCors(options =>
 {
+    var identityConfig = builder.Configuration.GetSection("Identity");
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.AllowAnyOrigin()
+            policy.WithOrigins(identityConfig["FrontendUrl"] ?? "*")
                   .AllowAnyHeader()
-                  .AllowAnyMethod();
+                  .AllowAnyMethod()
+                  .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
         });
 });
 
@@ -100,6 +116,8 @@ builder.Services.AddAuthentication(options => {
 
 // 5. Standart API Servisleri
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Global Hata Yönetimi
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -108,6 +126,30 @@ builder.Services.AddProblemDetails();
 var app = builder.Build();
 
 // 6. Middleware Boru Hattı
+app.UseRateLimiter(); // Hız sınırlama aktif
+
+// 2. Güvenlik Başlıkları (Security Headers)
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts(); // Sadece HTTPS zorla
+}
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Append("X-Frame-Options", "DENY");
+    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
+    context.Response.Headers.Append("Referrer-Policy", "no-referrer");
+    await next();
+});
+
+// 3. Swagger Koruması (Sadece Geliştirme Ortamında Görünsün)
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
 

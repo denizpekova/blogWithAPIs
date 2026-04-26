@@ -16,6 +16,7 @@ namespace blogWithAPI.Controllers
 {
     [ApiController]
     [Route("api/auth")]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("strict")]
     public class AuthController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;

@@ -10,6 +10,7 @@ namespace blogWithAPI.Controllers
 {
     [ApiController]
     [Route("api/posts")]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("strict")]
     public class BlogController : ControllerBase
     {
         private readonly IBlogService _blogService;

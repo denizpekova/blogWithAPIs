@@ -370,3 +370,5 @@ frontend/
 *.db
 *.db-shm
 *.db-wal
+*.py
+web.config
