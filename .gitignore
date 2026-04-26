@@ -372,3 +372,5 @@ frontend/
 *.db-wal
 *.py
 web.config
+publish_win/
+publish/
