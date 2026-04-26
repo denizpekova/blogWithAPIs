@@ -1,6 +1,6 @@
 using blogWithAPI.DataAccessLayer.Abstract;
 using blogWithAPI.BusinessLayer.Abstract;
-using blogWithAPI.BusinessLayer.Concrate;
+using blogWithAPI.BusinessLayer.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using blogWithAPI.Handlers;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 1. Veritabanı ve Identity Servisleri
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-if (connectionString != null && connectionString.Contains("blog.db") && !connectionString.Contains("/"))
-{
-    var dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "blog.db");
-    connectionString = $"Data Source={dbPath}";
-}
 
 builder.Services.AddDbContext<Context>(options =>
     options.UseSqlite(connectionString));
@@ -56,6 +51,7 @@ builder.Services.AddIdentity<AppUser, AppRole>()
 // 2. İş Mantığı / Katman Servisleri
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 builder.Services.AddScoped<IBlogService, BlogManager>();
+builder.Services.AddScoped<IAuditService, AuditManager>();
 
 // 3. IdentityServer Yapılandırması
 builder.Services.AddIdentityServer()

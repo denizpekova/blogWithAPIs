@@ -20,5 +20,7 @@ namespace blogWithAPI.DataAccessLayer.Concrete
 
         public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
 
+        public DbSet<AuditLog> AuditLogs { get; set; }
+
     }
 }

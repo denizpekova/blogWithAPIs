@@ -4,6 +4,7 @@ using blogWithAPI.Entity.Concrete;
 using blogWithAPI.Entity.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using blogWithAPI.Filters;
 
 
 namespace blogWithAPI.Controllers
@@ -36,6 +37,7 @@ namespace blogWithAPI.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
+        [AuditLog(ActionName = "ADD_POST")]
         public IActionResult Add(Blog blog)
         {
             var result = _blogService.Add(blog);
@@ -44,6 +46,7 @@ namespace blogWithAPI.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut]
+        [AuditLog(ActionName = "UPDATE_POST")]
         public IActionResult Update(Blog blog)
         {
             var result = _blogService.Update(blog);
@@ -52,6 +55,7 @@ namespace blogWithAPI.Controllers
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("{id}")]
+        [AuditLog(ActionName = "DELETE_POST")]
         public IActionResult Delete(int id)
         {
             var result = _blogService.Delete(id);

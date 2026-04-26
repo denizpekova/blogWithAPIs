@@ -11,6 +11,7 @@ using Duende.IdentityModel.Client;
 using System.Security.Claims;
 using blogWithAPI.DataAccessLayer.Concrete;
 using Microsoft.EntityFrameworkCore;
+using blogWithAPI.Filters;
 
 namespace blogWithAPI.Controllers
 {
@@ -37,6 +38,7 @@ namespace blogWithAPI.Controllers
         }
         
         [HttpPost("register")]
+        [AuditLog(ActionName = "USER_REGISTER")]
         public async Task<IActionResult> Register(RegisterDTO registerDto)
         {
             var user = new AppUser
@@ -65,6 +67,7 @@ namespace blogWithAPI.Controllers
         }
 
         [HttpPost("login")]
+        [AuditLog(ActionName = "USER_LOGIN")]
         public async Task<IActionResult> Login(LoginDTO loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
@@ -190,6 +193,7 @@ namespace blogWithAPI.Controllers
         }
 
         [HttpPost("logout")]
+        [AuditLog(ActionName = "USER_LOGOUT")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

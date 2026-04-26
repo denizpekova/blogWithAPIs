@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace blogWithAPI.BusinessLayer.Concrate
+namespace blogWithAPI.BusinessLayer.Concrete
 {
     public class BlogManager : IBlogService
     {
